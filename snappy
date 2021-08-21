@@ -13,7 +13,7 @@ esac || case "$(echo -e " full screen\n  select window\n壘  screencast
   " full screen") sleep 0.5s; scrot "$directory/$(date).png" ;;
   "  select window") scrot -s "$directory/$(date)-window.png" ;;
   "壘  screencast") ffmpeg -f x11grab  -framerate 25 -i $DISPLAY -c:v libx264 -preset ultrafast -c:a aac "$temp" > /dev/null 2>&1 & ;; 
-  "壘    screencast (select)") ret="$(xrectsel)" && ffmpeg -f x11grab  -framerate 25 $ret -c:v libx264 -preset ultrafast -c:a aac "$temp" > /dev/null 2>&1 ;; 
+  "壘    screencast (select)") ret="$(xrectsel)" && ffmpeg -f x11grab  -framerate 25 $ret -c:v libx264 -preset ultrafast -c:a aac "$temp" > /dev/null 2>&1 & ;; 
   "壘  screencast with audio") ffmpeg -f x11grab  -framerate 25 -i $DISPLAY -f pulse -i default -c:v libx264 -preset ultrafast -c:a aac "$temp" > /dev/null 2>&1 & ;;
   "壘    screencast with audio (select)") ret="$(xrectsel)" && ffmpeg -f x11grab  -framerate 25 $ret -f pulse -i default -c:v libx264 -preset ultrafast -c:a aac "$temp" > /dev/null 2>&1 & ;;
 	*) ;; 
