@@ -1,0 +1,21 @@
+#!/bin/bash
+#Author: Suraj Patel
+directory="$HOME/Pictures/Screenshots"
+video_directory="$HOME/Videos/Screencasts"
+temp="$HOME/.cache/screen.mp4"
+[ ! -d "$directory" ] && mkdir -p "$directory"
+[ ! -d "$video_directory" ] && mkdir -p "$video_directory"
+
+[ -f "$temp" ] && case "$(echo -e "yes\nno" | dmenu -p "Stop recording" -nf "$(xrdb -q | sed -n /*.color14/p | cut -f2)" -nb "$(xrdb -q | sed -n /*.color0/p | cut -f2)" -sb "$(xrdb -q | sed -n /*.color6/p | cut -f2)" -sf "$(xrdb -q | sed -n /*.color0/p | cut -f2)" )" in
+  "yes") killall --user $USER --ignore-case --signal SIGTERM  ffmpeg && mv "$temp" "$video_directory/screencast-$(date).mp4" ;;
+  *) ;;
+esac || case "$(echo -e " full screen\n  select window\n壘  screencast\n壘    screencast (select)\n壘  screencast with audio\n壘    screencast with audio (select)\n" | dmenu -p "Snappy" -nf "$(xrdb -q | sed -n /*.color14/p | cut -f2)" -nb "$(xrdb -q | sed -n /*.color0/p | cut -f2)" -sb "$(xrdb -q | sed -n /*.color6/p | cut -f2)" -sf "$(xrdb -q | sed -n /*.color0/p | cut -f2)" )" in
+  " full screen") sleep 0.5s; scrot "$directory/$(date).png" ;;
+  "  select window") scrot -s "$directory/$(date)-window.png" ;;
+  "壘  screencast") ffmpeg -f x11grab  -framerate 25 -i $DISPLAY -c:v libx264 -preset ultrafast -c:a aac "$temp" > /dev/null 2>&1 & ;; 
+  "壘    screencast (select)") ret="$(xrectsel)" && ffmpeg -f x11grab  -framerate 25 $ret -c:v libx264 -preset ultrafast -c:a aac "$temp" > /dev/null 2>&1 ;; 
+  "壘  screencast with audio") ffmpeg -f x11grab  -framerate 25 -i $DISPLAY -f pulse -i default -c:v libx264 -preset ultrafast -c:a aac "$temp" > /dev/null 2>&1 & ;;
+  "壘    screencast with audio (select)") ret="$(xrectsel)" && ffmpeg -f x11grab  -framerate 25 $ret -f pulse -i default -c:v libx264 -preset ultrafast -c:a aac "$temp" > /dev/null 2>&1 & ;;
+	*) ;; 
+esac
+
