@@ -33,11 +33,11 @@ set_snappy_font() {
   [ ! $sz ] && sz="12"
   use_hack="Hack Nerd Font:size=$sz"
 }
-if check_installed "snappy"; then
+if check_installed "snappy_screenutility"; then
   echo -e "$(tput setaf 4)  Found snappy in path!\n 1. Install snappy with the specified font size\n 2. Uninstall snappy"
   read -p " Choose (1, 2 [default 1]) : " ch 
   case $ch in
-    "2") rm /usr/bin/xrectsel && rm /usr/local/bin/snappy && echo "$(tput setaf 1) Uninstalled snappy from system." && tput setaf 7 && exit ;; 
+    "2") rm /usr/bin/xrectsel && rm /usr/local/bin/snappy_screenutility && echo "$(tput setaf 1) Uninstalled snappy from system." && tput setaf 7 && exit ;; 
     *) set_snappy_font ;;
   esac
 fi
@@ -55,8 +55,8 @@ echo -e "$(tput setaf 2)  All checks passed! Installing snappy."
 gcc -lX11 "$(pwd)/xrectsel.c" -o "$(pwd)/xrectsel"
 cp "$(pwd)/xrectsel" "/usr/bin"
 echo $use_hack
-[ ! "$use_hack" ] && cp "$(pwd)/snappy" "/usr/local/bin" || (sed "s/-fn/-fn \"$use_hack\"/g" snappy_font > /usr/local/bin/snappy)
+[ ! "$use_hack" ] && cp "$(pwd)/snappy" "/usr/local/bin/snappy_screenutility" || (sed "s/-fn/-fn \"$use_hack\"/g" snappy_font > /usr/local/bin/snappy_screenutility)
 
 chmod a+x /usr/bin/xrectsel
-chmod a+x /usr/local/bin/snappy
+chmod a+x /usr/local/bin/snappy_screenutility
 tput setaf 7
